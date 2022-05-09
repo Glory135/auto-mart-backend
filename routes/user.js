@@ -29,6 +29,7 @@ router.post("/user/post", async (req, res) => {
   }
 });
 
+
 // get single product
 // GET /api/product/:id
 // public
