@@ -7,21 +7,25 @@ const { cloudinary } = require("../cloudinary");
 // public
 router.post("/user/post", async (req, res) => {
   const { brand, img1, img2, img3 } = req.body;
-  const image = async (img) => {
-    const uploadedResponse = await cloudinary.uploader.upload(img, {
-      upload_preset: "ml_default",
-    });
-    return uploadedResponse.url;
-  };
+
+  const imgRes1 = await cloudinary.uploader.upload(img1, {
+    upload_preset: "ml_default",
+  });
+  const imgRes2 = await cloudinary.uploader.upload(img2, {
+    upload_preset: "ml_default",
+  });
+  const imgRes3 = await cloudinary.uploader.upload(img3, {
+    upload_preset: "ml_default",
+  });
 
   try {
     const product = await Product.create({
       ...req.body,
       brand: brand.toLowerCase(),
       images: {
-        main: image(img1),
-        extra1: image(img2),
-        extra2: image(img3),
+        main: imgRes1.url,
+        extra1: imgRes2.url,
+        extra2: imgRes3.url,
       },
     });
     res.status(200).json(product);
