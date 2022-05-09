@@ -6,6 +6,7 @@ const { cloudinary } = require("../cloudinary");
 // POST /api/user/post
 // public
 router.post("/user/post", async (req, res) => {
+
   const { brand, img1, img2, img3 } = req.body;
 
   const imgRes1 = await cloudinary.uploader.upload(img1, {
@@ -17,15 +18,30 @@ router.post("/user/post", async (req, res) => {
   const imgRes3 = await cloudinary.uploader.upload(img3, {
     upload_preset: "ml_default",
   });
+  const { img1, img2, img3 } = req.body;
+  const image = async (img) => {
+    const uploadedResponse = await cloudinary.uploader.upload(img, {
+      upload_preset: "ml_default",
+    });
+    return uploadedResponse.url;
+  };
+
 
   try {
     const product = await Product.create({
       ...req.body,
+
       brand: brand.toLowerCase(),
       images: {
         main: imgRes1.url,
         extra1: imgRes2.url,
         extra2: imgRes3.url,
+
+      images: {
+        main: image(img1),
+        extra1: image(img2),
+        extra2: image(img3),
+
       },
     });
     res.status(200).json(product);
@@ -33,6 +49,7 @@ router.post("/user/post", async (req, res) => {
     res.status(500).json(err);
   }
 });
+
 
 // get single product
 // GET /api/product/:id
@@ -46,6 +63,7 @@ router.get("/product/:id", async (req, res) => {
     res.status(500).json(err);
   }
 });
+
 
 // get all product
 // GET /api/products
@@ -88,4 +106,5 @@ router.delete("/product/:id", async (req, res) => {
     res.status(500).json(err);
   }
 });
+
 module.exports = router;
