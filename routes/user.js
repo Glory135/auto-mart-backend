@@ -6,7 +6,7 @@ const { cloudinary } = require("../cloudinary");
 // POST /api/user/post
 // public
 router.post("/user/post", async (req, res) => {
-  const { brand, img1, img2, img3 } = req.body;
+  const { brand, model, img1, img2, img3 } = req.body;
 
   const imgRes1 = await cloudinary.uploader.upload(img1, {
     upload_preset: "ml_default",
@@ -22,6 +22,7 @@ router.post("/user/post", async (req, res) => {
     const product = await Product.create({
       ...req.body,
       brand: brand.toLowerCase(),
+      model: model.toLowerCase(),
       images: {
         main: imgRes1.url,
         extra1: imgRes2.url,
@@ -57,11 +58,20 @@ router.get("/products", async (req, res) => {
     let products;
     if (search) {
       const brand = search.split("/")[0].toLowerCase();
-      const year = search.split("/")[1];
-      if (brand && year) {
+      const model = search.split("/")[1].toLowerCase();
+      const year = search.split("/")[2];
+      if (brand && model && year) {
+        products = await Product.find({ brand, model, year });
+      } else if (brand && model) {
+        products = await Product.find({ brand, model });
+      } else if (brand && year) {
         products = await Product.find({ brand, year });
+      } else if (model && year) {
+        products = await Product.find({ model, year });
       } else if (brand) {
         products = await Product.find({ brand });
+      } else if (model) {
+        products = await Product.find({ model });
       } else if (year) {
         products = await Product.find({ year });
       } else {
