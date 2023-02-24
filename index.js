@@ -14,13 +14,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 mongoose
-  .connect("mongodb+srv://Glory:2404@cluster0.p5rm9.mongodb.net/autoMart?retryWrites=true&w=majority")
+  .connect(process.env.DB_URL)
   .then(console.log("connected to DB"))
   .catch((err) => {
     console.log(err);
   });
 
-console.log(process.env.DB_URL);
 app.use("/api", userRoute);
 
 let port = process.env.PORT || 2000;
