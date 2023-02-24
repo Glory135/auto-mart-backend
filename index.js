@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 mongoose
-  .connect(process.env.DB_URL)
+  .connect("mongodb+srv://Glory:2404@cluster0.p5rm9.mongodb.net/autoMart?retryWrites=true&w=majority")
   .then(console.log("connected to DB"))
   .catch((err) => {
     console.log(err);
