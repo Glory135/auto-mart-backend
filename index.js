@@ -20,7 +20,6 @@ mongoose
     console.log(err);
   });
 
-console.log(process.env.DB_URL);
 app.use("/api", userRoute);
 
 let port = process.env.PORT || 2000;
